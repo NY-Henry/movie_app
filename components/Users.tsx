@@ -78,10 +78,9 @@ const UserManager = () => {
       inputRange: [0, 1],
       outputRange: [20 * (index + 1), 0],
     });
-
     return (
       <Animated.View
-        className="bg-white/30 border border-white/20 rounded-2xl p-4 mb-4 backdrop-blur-md shadow-lg"
+        className="bg-gray-800/80 border border-gray-600 rounded-2xl p-4 mb-4"
         style={{
           transform: [{ translateY }],
           opacity: animation,
@@ -112,25 +111,24 @@ const UserManager = () => {
       </Animated.View>
     );
   };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.select({ ios: "padding", android: undefined })}
-      className="flex-1 bg-gradient-to-br from-gray-900 to-black px-5 pt-10"
+      className="flex-1 bg-gray-900 px-5 pt-10"
     >
       <Text className="text-3xl font-bold text-white mb-6 text-center">
         User Manager
       </Text>
 
       {/* User Form */}
-      <View className="bg-white/10 rounded-2xl p-6 mb-6 backdrop-blur-xl shadow-xl">
+      <View className="bg-gray-800/90 rounded-2xl p-6 mb-6 border border-gray-700">
         <TextInput
           ref={nameInputRef}
           value={user.name}
           placeholder="Name"
           placeholderTextColor="#ccc"
           onChangeText={(name) => setUser((prev) => ({ ...prev, name }))}
-          className="text-white border-b border-white/30 pb-2 mb-4"
+          className="text-white border-b border-gray-600 pb-2 mb-4 text-base"
         />
         <TextInput
           value={user.age ? user.age.toString() : ""}
@@ -140,7 +138,7 @@ const UserManager = () => {
           onChangeText={(age) =>
             setUser((prev) => ({ ...prev, age: parseInt(age) || 0 }))
           }
-          className="text-white border-b border-white/30 pb-2 mb-4"
+          className="text-white border-b border-gray-600 pb-2 mb-4 text-base"
         />
 
         <TouchableOpacity
