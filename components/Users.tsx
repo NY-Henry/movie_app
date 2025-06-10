@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -5,6 +6,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
   Text,
   TextInput,
   TouchableOpacity,
@@ -80,75 +82,117 @@ const UserManager = () => {
     });
     return (
       <Animated.View
-        className="bg-gray-800/80 border border-gray-600 rounded-2xl p-4 mb-4"
+        className="bg-white/95 rounded-2xl p-4 mb-4 shadow-lg"
         style={{
           transform: [{ translateY }],
           opacity: animation,
+          elevation: 3,
         }}
       >
         <View className="flex-row justify-between items-center">
-          <View>
-            <Text className="text-lg font-semibold text-white">
-              {item.name}
-            </Text>
-            <Text className="text-sm text-white/70">Age: {item.age}</Text>
+          <View className="flex-row items-center">
+            <View className="bg-blue-100 rounded-full p-2 mr-3">
+              <MaterialIcons name="person" size={24} color="#1a73e8" />
+            </View>
+            <View>
+              <Text className="text-lg font-semibold text-gray-800">
+                {item.name}
+              </Text>
+              <Text className="text-sm text-gray-500">Age: {item.age}</Text>
+            </View>
           </View>
-          <View className="flex-row space-x-3">
+          <View className="flex-row space-x-10">
             <TouchableOpacity
               onPress={() => handleEdit(item)}
-              className="px-3 py-1 rounded-full bg-purple-600"
+              className="p-2 rounded-full bg-gray-100"
             >
-              <Text className="text-white text-sm">Edit</Text>
+              <MaterialIcons name="edit" size={20} color="#1a73e8" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleDelete(item.id)}
-              className="px-3 py-1 rounded-full bg-red-500"
+              className="p-2 rounded-full bg-gray-100"
             >
-              <Text className="text-white text-sm">Delete</Text>
+              <MaterialIcons name="delete" size={20} color="#ea4335" />
             </TouchableOpacity>
           </View>
         </View>
       </Animated.View>
     );
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.select({ ios: "padding", android: undefined })}
-      className="flex-1 bg-gray-900 px-5 pt-10"
+      className="flex-1 bg-gray-50 px-5 pt-10"
     >
-      <Text className="text-3xl font-bold text-white mb-6 text-center">
-        User Manager
-      </Text>
+      <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
+
+      <View className="flex-row items-center justify-center mb-6">
+        <MaterialIcons name="manage-accounts" size={28} color="#1a73e8" />
+        <Text className="text-2xl font-bold text-gray-800 ml-2">
+          User Manager
+        </Text>
+      </View>
 
       {/* User Form */}
-      <View className="bg-gray-800/90 rounded-2xl p-6 mb-6 border border-gray-700">
-        <TextInput
-          ref={nameInputRef}
-          value={user.name}
-          placeholder="Name"
-          placeholderTextColor="#ccc"
-          onChangeText={(name) => setUser((prev) => ({ ...prev, name }))}
-          className="text-white border-b border-gray-600 pb-2 mb-4 text-base"
-        />
-        <TextInput
-          value={user.age ? user.age.toString() : ""}
-          placeholder="Age"
-          placeholderTextColor="#ccc"
-          keyboardType="number-pad"
-          onChangeText={(age) =>
-            setUser((prev) => ({ ...prev, age: parseInt(age) || 0 }))
-          }
-          className="text-white border-b border-gray-600 pb-2 mb-4 text-base"
-        />
+      <View className="bg-white rounded-2xl p-6 mb-6 shadow-md">
+        <View className="flex-row items-center border-b border-gray-200 pb-2 mb-4">
+          <MaterialIcons
+            name="person"
+            size={20}
+            color="#5f6368"
+            className="mr-2"
+          />
+          <TextInput
+            ref={nameInputRef}
+            value={user.name}
+            placeholder="Name"
+            placeholderTextColor="#9aa0a6"
+            onChangeText={(name) =>
+              setUser((prev: { name: string; age: number }) => ({
+                ...prev,
+                name,
+              }))
+            }
+            className="text-gray-800 ml-2 flex-1 text-base"
+          />
+        </View>
+
+        <View className="flex-row items-center border-b border-gray-200 pb-2 mb-4">
+          <MaterialIcons
+            name="cake"
+            size={20}
+            color="#5f6368"
+            className="mr-2"
+          />
+          <TextInput
+            value={user.age ? user.age.toString() : ""}
+            placeholder="Age"
+            placeholderTextColor="#9aa0a6"
+            keyboardType="number-pad"
+            onChangeText={(age) =>
+              setUser((prev: { name: string; age: number }) => ({
+                ...prev,
+                age: parseInt(age) || 0,
+              }))
+            }
+            className="text-gray-800 ml-2 flex-1 text-base"
+          />
+        </View>
 
         <TouchableOpacity
           onPress={handleSaveUpdate}
           disabled={!user.name || user.age <= 0}
-          className={`mt-2 py-3 rounded-xl ${
-            updating ? "bg-emerald-500" : "bg-blue-600"
+          className={`mt-2 py-3 rounded-xl flex-row justify-center items-center ${
+            updating ? "bg-green-500" : "bg-blue-600"
           } ${!user.name || user.age <= 0 ? "opacity-50" : ""}`}
         >
-          <Text className="text-white text-center font-semibold text-base">
+          <MaterialIcons
+            name={updating ? "update" : "add"}
+            size={20}
+            color="white"
+          />
+          <Text className="text-white text-center font-semibold text-base ml-2">
             {updating ? "Update User" : "Add User"}
           </Text>
         </TouchableOpacity>
@@ -157,7 +201,8 @@ const UserManager = () => {
       {/* User List */}
       {users.length === 0 ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-white/60 text-lg">No users yet</Text>
+          <MaterialIcons name="people-outline" size={50} color="#9aa0a6" />
+          <Text className="text-gray-500 text-lg mt-3">No users yet</Text>
         </View>
       ) : (
         <FlatList
@@ -172,9 +217,10 @@ const UserManager = () => {
       {users.length > 0 && (
         <TouchableOpacity
           onPress={() => setUsers([])}
-          className="absolute bottom-8 right-6 bg-red-600 p-4 rounded-full shadow-xl"
+          className="absolute bottom-8 right-6 bg-red-500 p-4 rounded-full shadow-xl"
+          style={{ elevation: 5 }}
         >
-          <Text className="text-white font-bold text-sm">Clear</Text>
+          <MaterialIcons name="clear-all" size={24} color="white" />
         </TouchableOpacity>
       )}
     </KeyboardAvoidingView>
